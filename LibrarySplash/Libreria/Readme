@@ -87,7 +87,7 @@
 
         Bundle args = new Bundle();
         args.putString("parametros",configurarSplash() );
-        args.putString("class", MainActivity.class.getCanonicalName());
+        args.putString("class", MainActivity2.class.getCanonicalName()); //aca le indico a la libreria que activity abrir cuando se acepten condiciones
         splashScreen.setArguments(args);
 
         new Util(FirstActivity.this).pushFragment(splashScreen,R.id.contenedoFragmento);

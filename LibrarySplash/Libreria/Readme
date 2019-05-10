@@ -1,0 +1,105 @@
+1) En el gradle incluir la libreria de Gson y sincronizar el proyecto:
+
+  implementation 'com.google.code.gson:gson:2.3.1'
+  
+2) Añadir la libreria descargada dando click derecho en app/New/Module/Import JAR/AAR Package y next
+
+3) En la parte de file name  ir al directorio donde se descargo la libreria y finish
+
+4) File / Project Structure / Dependencies / app / 
+
+  añadir -> Module Dependence -> splashandconditions -> OK -> Apply -> OK
+  
+5) Se necesitan dos actividades (los nombres de la misma no son importantes):
+  1- MainActivity: que va a visualizar todos los procesos del splash y los terminos y condiciones
+  2- MainActivity2: actividad que se mostrara una vez los terminos y condiociones sean aceptados por el usuario
+  
+6) Como la primera actividad va a contener todo lo que un splash refiere, esta actividad debe estar en pantalla completa (FullScreen), 
+  para ello vamos al manifiest y añadimos al MainActivity:
+      android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"
+      
+  para que este tema se tome, debemos tambien ir a la carpeta "values" y en el archivo "styles.xml" añadir:
+      <style name="Theme.AppCompat.Light.NoActionBar.FullScreen" parent="@style/Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+    
+  con esto ya tenemos configurado el FullScreen para que esteticamente se vea mejor el splash.
+  
+7) Para alojar el splash vamos el alyout de la primera actividad y cambiamos todo su contenido por:
+
+    <?xml version="1.0" encoding="utf-8"?>
+    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FFFFFF"
+        tools:context=".MainActivity">
+
+        <FrameLayout
+            android:id="@+id/contenedoFragmento"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+        </FrameLayout>
+
+    </android.support.constraint.ConstraintLayout>
+    
+  En la seccion "tools:context" colocamos nuestro MainActivity inicial, y listo, lo siguiente es invocar la libreria.
+  
+8) En la clase de la actividad inicial creamos la siguiente funcion:
+
+          private String configurarSplash(){
+              PropertiesSplash propertiesSplash = new PropertiesSplash();
+              propertiesSplash.setDURATION_SPASH(3000);
+              propertiesSplash.setNombreProyecto(getString(R.string.app_name));
+              propertiesSplash.setCorreo("wisrovi.rodriguez@gmail.com");
+              propertiesSplash.setEmpresa("'SAMANTHA Intelligence'");
+              propertiesSplash.setEmpresaAbreviado("'WISROVI'");
+              propertiesSplash.setWebEmpresa("https://www.linkedin.com/in/wisrovi-rodriguez/");
+              propertiesSplash.setSOdisponiblesApp("Android");
+              propertiesSplash.setLugaresDescargaApp("Google Play");
+              propertiesSplash.setImagenSplash(R.drawable.splash);
+              propertiesSplash.setIconoAplicacion(R.drawable.icono);
+              propertiesSplash.setResumenFuncionalidadesAplicacion("Algunas funciones de la aplicación," +
+                      " como la posibilidad de procesar la información de diferentes sensores" +
+                      " y la función de notificaciones automáticas, requerirán que la aplicación" +
+                      " disponga de una conexión a Internet activa. La conexión puede ser mediante" +
+                      " Wi-Fi o a través del proveedor de servicios de red móvil," +
+                      " pero " + propertiesSplash.getNombreProyecto() + " no se hará responsable del mal funcionamiento" +
+                      " de la aplicación en caso de que no disponga" +
+                      " de conexión Wi-Fi o haya superado su límite de uso de datos.");
+
+              propertiesSplash.setLugarPonerFragmento(R.id.contenedoFragmento);
+              Gson gson = new Gson();
+              return gson.toJson(propertiesSplash);
+          }
+    
+    En esta clase cambiaremos todos los parametros que necesitemos, luego en el constructor de la clase colocamos:
+    
+        SplashScreen splashScreen = new SplashScreen();
+        getSupportFragmentManager().beginTransaction().add(R.id.contenedoFragmento, splashScreen);
+
+
+        Bundle args = new Bundle();
+        args.putString("parametros",configurarSplash() );
+        args.putString("class", MainActivity.class.getCanonicalName());
+        splashScreen.setArguments(args);
+
+        new Util(FirstActivity.this).pushFragment(splashScreen,R.id.contenedoFragmento);
+        
+        
+    Importamos todas las clases que nos pida el programa, clases que estan incluidas dentro de la libreria instalada
+    
+
+9) Ejecutamos el programa y tendremos algo como esto:
+
+    
+      
+      
+      
+  
